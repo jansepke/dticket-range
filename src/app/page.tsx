@@ -1,11 +1,9 @@
-// @ts-ignore
-import { readStations } from "db-stations";
-import { collect } from "../../scripts/util.mjs";
+import { getStations } from "@/data/stations";
 import Link from "next/link";
 
 export default async function Home() {
   // TODO: remove stations without file
-  const stations = await collect(readStations());
+  const stations = await getStations();
 
   return (
     <main>
