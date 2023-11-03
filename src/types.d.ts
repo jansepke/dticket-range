@@ -1,7 +1,9 @@
+export interface Destination {
+  duration: number;
+  line: string;
+  changed: number;
+}
+
 export interface Destinations {
-  [station: string]: {
-    duration: number;
-    line: string;
-    changed: number;
-  };
+  [station: string]: Destination;
 }

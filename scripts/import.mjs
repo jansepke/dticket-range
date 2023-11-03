@@ -5,7 +5,7 @@ import { collect, logProgress, parallel, unique } from "./util.mjs";
 import fs from "node:fs/promises";
 import assert from "node:assert";
 
-const maxChanges = 1;
+const maxChanges = 2;
 const maxDuration = 4 * 60 * 60;
 
 const stations = await collect(readStations());
