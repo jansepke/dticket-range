@@ -5,7 +5,7 @@
   "scripts": {
     "import": "mkdir -p ./data && rm -f ./data/* && node ./scripts/import.mjs",
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run import && next build",
     "start": "next start",
     "lint": "next lint"
   },
