@@ -2,6 +2,7 @@ import { Map } from "@/app/stations/[id]/Map";
 import { getStations } from "@/data/stations";
 import { Destinations } from "@/types";
 import fs from "node:fs/promises";
+import path from "node:path";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const stations = await getStations();
@@ -23,4 +24,10 @@ export default async function Home({ params }: { params: { id: string } }) {
       />
     </main>
   );
+}
+
+export async function generateStaticParams() {
+  const files = await fs.readdir("data");
+
+  return files.map((f) => ({ id: path.basename(f).replace(".json", "") }));
 }
