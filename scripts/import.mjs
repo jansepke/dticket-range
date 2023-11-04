@@ -83,7 +83,11 @@ function findDestinations(station, line, destinations, changed = 0, duration = 0
       continue;
     }
 
-    if (!destinations[connection.to] || destinations[connection.to].duration > duration) {
+    if (
+      !destinations[connection.to] ||
+      destinations[connection.to].duration > duration ||
+      (destinations[connection.to].duration === duration && destinations[connection.to].changed > changed)
+    ) {
       destinations[connection.to] = { duration, line, changed };
 
       if (relevantStations[connection.to] && connection.to) {
