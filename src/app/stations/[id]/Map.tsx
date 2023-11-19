@@ -1,6 +1,7 @@
 "use client";
 import { Destination, Destinations } from "@/types";
 import { Wrapper } from "@googlemaps/react-wrapper";
+import Box from "@mui/material/Box";
 import React, { useEffect, useRef, useState } from "react";
 
 interface DestinationForMap extends Destination {
@@ -53,7 +54,7 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
     }
   }, [ref, destinations]);
 
-  return <div style={{ height: "100vh", width: "100vw" }} ref={ref} />;
+  return <Box sx={{ flexGrow: 1 }} ref={ref} />;
 };
 
 function formatDuration(duration: number) {

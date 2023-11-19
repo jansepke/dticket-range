@@ -1,6 +1,7 @@
 import { Map } from "@/app/stations/[id]/Map";
 import { getStations } from "@/data/stations";
 import { Destinations } from "@/types";
+import Stack from "@mui/material/Stack";
 import fs from "node:fs/promises";
 import { ConfigurationForm } from "./ConfigurationForm";
 
@@ -14,7 +15,7 @@ export default async function StationPage({ params }: { params: StationPageParam
   const destinations: Destinations = params.id ? await getDestinations(params.id) : {};
 
   return (
-    <main>
+    <Stack sx={{ height: "100vh" }}>
       <ConfigurationForm currentStation={params.id} stations={stations.map((s) => ({ label: s.name, id: s.id }))} />
       <Map
         destinations={Object.entries(destinations).flatMap(([id, data]) => {
@@ -27,7 +28,7 @@ export default async function StationPage({ params }: { params: StationPageParam
           return { station: station.name, lat: station.location.lat, lng: station.location.lng, ...data };
         })}
       />
-    </main>
+    </Stack>
   );
 }
 
