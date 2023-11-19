@@ -27,6 +27,8 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
   useEffect(() => {
     if (ref.current) {
       const map = new window.google.maps.Map(ref.current, {
+        center: new google.maps.LatLng({ lat: 51, lng: 10 }),
+        zoom: 6.5,
         mapTypeControl: false,
         streetViewControl: false,
       });
@@ -45,7 +47,9 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
         bounds.extend(destination);
       }
 
-      map.fitBounds(bounds);
+      if (destinations.length > 0) {
+        map.fitBounds(bounds);
+      }
     }
   }, [ref, destinations]);
 

@@ -2,15 +2,20 @@ import { Map } from "@/app/stations/[id]/Map";
 import { getStations } from "@/data/stations";
 import { Destinations } from "@/types";
 import fs from "node:fs/promises";
-import path from "node:path";
+import { ConfigurationForm } from "./ConfigurationForm";
 
-export default async function Home({ params }: { params: { id: string } }) {
+interface StationPageParams {
+  id?: string;
+}
+
+export default async function StationPage({ params }: { params: StationPageParams }) {
   const stations = await getStations();
-  const rawDestinations = await fs.readFile(`data/destinations/${params.id}.json`, "utf-8");
-  const destinations = JSON.parse(rawDestinations) as Destinations;
+
+  const destinations: Destinations = params.id ? await getDestinations(params.id) : {};
 
   return (
     <main>
+      <ConfigurationForm currentStation={params.id} stations={stations.map((s) => ({ label: s.name, id: s.id }))} />
       <Map
         destinations={Object.entries(destinations).flatMap(([id, data]) => {
           const station = stations.find((s) => s.id === id);
@@ -26,8 +31,11 @@ export default async function Home({ params }: { params: { id: string } }) {
   );
 }
 
-export async function generateStaticParams() {
-  const files = await fs.readdir("data/destinations");
+async function getDestinations(id: string) {
+  const rawDestinations = await fs.readFile(`data/destinations/${id}.json`, "utf-8");
+  return JSON.parse(rawDestinations) as Destinations;
+}
 
-  return files.filter((f) => f.endsWith(".json")).map((f) => ({ id: path.basename(f).replace(".json", "") }));
+export async function generateStaticParams(): Promise<StationPageParams[]> {
+  return await getStations();
 }

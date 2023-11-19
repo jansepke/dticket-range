@@ -1,19 +1,5 @@
-import { getStations } from "@/data/stations";
-import Link from "next/link";
+import StationPage from "@/app/stations/[id]/page";
 
 export default async function Home() {
-  // TODO: remove stations without file
-  const stations = await getStations();
-
-  return (
-    <main>
-      <ul>
-        {stations.map((station) => (
-          <li key={station.id}>
-            <Link href={`/stations/${station.id}`}>{station.name}</Link>
-          </li>
-        ))}
-      </ul>
-    </main>
-  );
+  return await StationPage({ params: {} });
 }
