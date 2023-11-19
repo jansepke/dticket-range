@@ -1,11 +1,3 @@
-export const collect = async (iterator) => {
-  const items = [];
-  for await (const item of iterator) {
-    items.push(item);
-  }
-  return items;
-};
-
 export const parallel = async (workerCount, data, workFunction) => {
   async function doWork(iterator) {
     for (const [index, item] of iterator) {

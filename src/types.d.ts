@@ -7,3 +7,12 @@ export interface Destination {
 export interface Destinations {
   [station: string]: Destination;
 }
+
+export interface Station {
+  id: string;
+  name: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+}

@@ -35,6 +35,7 @@ export function connectionsForStation(connections, station, line) {
 
   const startIdx = connections.findIndex((c) => c.from === station);
   if (startIdx < 0) {
+    // TODO
     // console.error(`could not find ${station} in ${line}`);
     return [];
   }

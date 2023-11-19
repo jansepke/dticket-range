@@ -1,15 +1,13 @@
-import { readStations } from "db-stations";
+import assert from "node:assert";
+import fs from "node:fs/promises";
 import { connectionsForStation, connectionsFromTrip } from "./connections.mjs";
 import { getDepartures, getTrip } from "./hafas.mjs";
-import { collect, logProgress, parallel, unique } from "./util.mjs";
-import fs from "node:fs/promises";
-import assert from "node:assert";
+import { logProgress, parallel, unique } from "./util.mjs";
 
 const maxChanges = 2;
 const maxDuration = 4 * 60 * 60;
 
-const stations = await collect(readStations());
-console.log("all stations", stations.length);
+const stations = JSON.parse(await fs.readFile("data/stations.json", "utf-8"));
 
 const relevantStations = {};
 const relevantLines = {};
@@ -35,6 +33,10 @@ const analyzeStation = async (index, station) => {
 let stopCount = 0;
 
 const analyzeTrip = async (index, [line, trips]) => {
+  if (trips.length === 0) {
+    return;
+  }
+
   const trip = await getTrip(trips[0]);
 
   if (line !== trip.line.id) {
@@ -63,7 +65,7 @@ for (const [station, lines] of Object.entries(relevantStations)) {
     findDestinations(station, line, destinations);
   }
 
-  fs.writeFile(`./data/${station}.json`, JSON.stringify(destinations));
+  fs.writeFile(`./data/destinations/${station}.json`, JSON.stringify(destinations));
 }
 
 console.log("relevantStations", Object.keys(relevantStations).length);

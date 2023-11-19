@@ -6,7 +6,7 @@ import path from "node:path";
 
 export default async function Home({ params }: { params: { id: string } }) {
   const stations = await getStations();
-  const rawDestinations = await fs.readFile(`data/${params.id}.json`, "utf-8");
+  const rawDestinations = await fs.readFile(`data/destinations/${params.id}.json`, "utf-8");
   const destinations = JSON.parse(rawDestinations) as Destinations;
 
   return (
@@ -19,7 +19,7 @@ export default async function Home({ params }: { params: { id: string } }) {
             return [];
           }
 
-          return { station: station.name, lat: station.location.latitude, lng: station.location.longitude, ...data };
+          return { station: station.name, lat: station.location.lat, lng: station.location.lng, ...data };
         })}
       />
     </main>

@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "import": "mkdir -p ./data && rm -f ./data/* && node ./scripts/import.mjs",
+    "import:stations": "node --env-file .env.local ./scripts/import-stations.mjs",
+    "import:destinations": "rm -f ./data/destinations/* && node ./scripts/import.mjs",
+    "import": "npm run import:stations && npm run import:destinations",
     "dev": "next dev",
     "build": "npm run import && next build",
     "start": "next start",
@@ -24,7 +26,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "db-hafas": "^6.0.0",
-    "db-stations": "^5.0.2",
     "eslint": "^8",
     "eslint-config-next": "14.0.1",
     "prettier": "^3.0.3",

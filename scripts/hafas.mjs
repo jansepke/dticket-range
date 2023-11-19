@@ -51,7 +51,10 @@ export const getDepartures = async (stationId) => {
 
     return departures.departures.filter(validForDTicket);
   } catch (error) {
-    console.error(stationId, error.toString());
+    if (error.toString() !== "Error: LOCATION: location/stop not found") {
+      console.error(stationId, error.toString());
+    }
+    return [];
   }
 };
 
