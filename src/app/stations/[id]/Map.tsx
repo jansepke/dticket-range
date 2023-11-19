@@ -26,12 +26,15 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
 
   useEffect(() => {
     if (ref.current) {
-      const map = new window.google.maps.Map(ref.current, {});
+      const map = new window.google.maps.Map(ref.current, {
+        mapTypeControl: false,
+        streetViewControl: false,
+      });
 
       var bounds = new google.maps.LatLngBounds();
 
       for (const destination of destinations) {
-        const marker = new google.maps.Marker({
+        new google.maps.Marker({
           map,
           position: { lat: destination.lat, lng: destination.lng },
           title: `${destination.station} in ${formatDuration(destination.duration)} by ${destination.line} (${
