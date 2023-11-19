@@ -19,5 +19,5 @@
 
 ## Inspired by
 
-- the great work of @derhuerst
-- the great work of @juliuste
+- the great work of [@derhuerst](https://github.com/derhuerst)
+- the great work of [@juliuste](https://github.com/juliuste)
