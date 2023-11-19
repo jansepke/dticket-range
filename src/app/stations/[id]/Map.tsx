@@ -26,24 +26,27 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
 
   useEffect(() => {
     if (ref.current) {
-      const map = new window.google.maps.Map(ref.current, {
-        center: new google.maps.LatLng({ lat: 53.5506201, lng: 9.9545555 }),
-        zoom: 7,
-      });
+      const map = new window.google.maps.Map(ref.current, {});
+
+      var bounds = new google.maps.LatLngBounds();
 
       for (const destination of destinations) {
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
           map,
           position: { lat: destination.lat, lng: destination.lng },
           title: `${destination.station} in ${formatDuration(destination.duration)} by ${destination.line} (${
             destination.changed
           } changes)`,
         });
+
+        bounds.extend(destination);
       }
+
+      map.fitBounds(bounds);
     }
   }, [ref, destinations]);
 
-  return <div style={{ height: 400, width: 500 }} ref={ref} />;
+  return <div style={{ height: "100vh", width: "100vw" }} ref={ref} />;
 };
 
 function formatDuration(duration: number) {
