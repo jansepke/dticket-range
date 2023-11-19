@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "import:stations": "node --env-file .env.local ./scripts/import-stations.mjs",
+    "import:stations": "node --env-file .env.local ./scripts/import-stations.mjs || node ./scripts/import-stations.mjs",
     "import:destinations": "rm -f ./data/destinations/* && node ./scripts/import.mjs",
     "import": "npm run import:stations && npm run import:destinations",
     "dev": "next dev",
