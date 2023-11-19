@@ -10,10 +10,14 @@
 
 ## TODO
 
-- thank
 - TS for scripts
 - input field
 - combine multiple stations in same city
 - change settings in UI
 - explain results
 - use https://www.npmjs.com/package/db-clean-station-name
+
+## Inspired by
+
+- the great work of @derhuerst
+- the great work of @juliuste
