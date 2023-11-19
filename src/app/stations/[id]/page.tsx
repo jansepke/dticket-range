@@ -27,7 +27,7 @@ export default async function Home({ params }: { params: { id: string } }) {
 }
 
 export async function generateStaticParams() {
-  const files = await fs.readdir("data");
+  const files = await fs.readdir("data/destinations");
 
-  return files.map((f) => ({ id: path.basename(f).replace(".json", "") }));
+  return files.filter((f) => f.endsWith(".json")).map((f) => ({ id: path.basename(f).replace(".json", "") }));
 }
