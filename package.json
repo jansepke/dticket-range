@@ -11,6 +11,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "engines": {
+    "node": ">=20.6. <21"
+  },
   "prettier": {
     "printWidth": 120
   },
