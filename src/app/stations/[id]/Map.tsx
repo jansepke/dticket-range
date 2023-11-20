@@ -36,13 +36,22 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
 
       var bounds = new google.maps.LatLngBounds();
 
+      const infowindow = new google.maps.InfoWindow();
+
       for (const destination of destinations) {
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
           map,
           position: { lat: destination.lat, lng: destination.lng },
-          title: `${destination.station} in ${formatDuration(destination.duration)} by ${destination.line} (${
-            destination.changed
-          } changes)`,
+          title: destination.station,
+        });
+
+        const description = `${destination.station} in ${formatDuration(destination.duration)} by ${
+          destination.line
+        } (${destination.changed} changes)`;
+
+        marker.addListener("click", () => {
+          infowindow.setContent(description);
+          infowindow.open({ anchor: marker, map });
         });
 
         bounds.extend(destination);
