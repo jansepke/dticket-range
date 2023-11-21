@@ -26,7 +26,7 @@ export const ConfigurationForm: React.FC<ConfigurationFormProps> = ({ currentSta
         value={stations.find((s) => s.id === currentStation)}
         filterOptions={(o, s) => (s.inputValue.length < 3 ? [] : createFilterOptions<Option>()(o, s))}
         onChange={(e, o) => o && router.push(`/stations/${o.id}`)}
-        noOptionsText="Please start typing"
+        noOptionsText="Bitte einen validen Bahnhof eingeben"
         fullWidth
         sx={{ maxWidth: { md: "33%" } }}
         renderInput={(params) => <TextField {...params} label="Bahnhof" />}

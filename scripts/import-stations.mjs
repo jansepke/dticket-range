@@ -2,6 +2,7 @@
 
 import fs from "node:fs/promises";
 import assert from "node:assert/strict";
+import cleanStationName from "db-clean-station-name";
 
 const endpoint = "https://apis.deutschebahn.com/db-api-marketplace/apis/station-data/v2/stations";
 
@@ -34,7 +35,7 @@ await fs.writeFile("data/stations.json", JSON.stringify(stations));
 function parseStation(data) {
   const station = {
     id: parseId(data.evaNumbers),
-    name: data.name,
+    name: cleanStationName(data.name),
     location: parseLocation(data.evaNumbers),
     city: data.mailingAddress.city,
   };

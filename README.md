@@ -15,7 +15,6 @@
 - combine multiple stations in same city
 - change settings in UI
 - explain results
-- use https://www.npmjs.com/package/db-clean-station-name
 
 ## Inspired by
 
