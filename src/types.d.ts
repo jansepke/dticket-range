@@ -17,3 +17,10 @@ export interface Station {
   };
   city: String;
 }
+
+export interface Connection {
+  from: string;
+  to: string;
+  duration: number;
+  pause: number;
+}

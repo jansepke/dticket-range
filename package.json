@@ -2,9 +2,10 @@
   "name": "dticket-range",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "import:stations": "node -r ts-node/register --env-file .env.local ./src/import/import-stations.ts || node -r ts-node/register ./import/import-stations.ts",
-    "import:destinations": "rm -f ./data/destinations/* && node ./src/import/import.mjs",
+    "import:stations": "NODE_OPTIONS='--loader ts-node/esm' node --env-file .env.local ./src/import/import-stations.ts || node ./import/import-stations.ts",
+    "import:destinations": "rm -f ./data/destinations/* && node --loader ts-node/esm ./src/import/import-destinations.ts",
     "import": "npm run import:stations && npm run import:destinations",
     "dev": "next dev",
     "build": "npm run import && next build",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@types/google.maps": "^3.54.6",
+    "@types/hafas-client": "^6.1.6",
     "@types/node": "^20.9.3",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.16",

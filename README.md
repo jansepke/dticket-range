@@ -10,7 +10,6 @@
 
 ## TODO
 
-- TS for scripts
 - input field
 - combine multiple stations in same city
 - change settings in UI

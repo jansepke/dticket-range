@@ -1,6 +1,8 @@
+/// <reference path="../types/db-hafas.d.ts" />
 import { createDbHafas } from "db-hafas";
+import { RAlternative, RTrip } from "@/types/hafas-client";
 
-export const hafas = createDbHafas("jansepke");
+const hafas = createDbHafas("jansepke");
 
 const ignoreProducts = [
   "Bus", // Train Replacement Bus
@@ -19,10 +21,10 @@ const ignoreProducts = [
   "DBK", // DBK Historische Bahn
 ];
 
-const validProductName = (productName) => !!productName && !ignoreProducts.includes(productName);
-const validForDTicket = (d) => validProductName(d.line.productName);
+const validProductName = (productName?: string) => !!productName && !ignoreProducts.includes(productName);
+const validForDTicket = (d: RAlternative) => validProductName(d.line.productName);
 
-export const getDepartures = async (stationId) => {
+export const getDepartures = async (stationId: string): Promise<RAlternative[]> => {
   // TODO: search for next 7 dates
   try {
     const departures = await hafas.departures(stationId, {
@@ -43,27 +45,22 @@ export const getDepartures = async (stationId) => {
       remarks: false,
     });
 
-    // for (const departure of departures.departures) {
-    //   if (departure.line.id === "rex-1") {
-    //     console.log(departure);
-    //   }
-    // }
-
-    return departures.departures.filter(validForDTicket);
+    return (departures.departures as RAlternative[]).filter(validForDTicket);
   } catch (error) {
-    if (error.toString() !== "Error: LOCATION: location/stop not found") {
+    if (error instanceof Error && error.toString() !== "Error: LOCATION: location/stop not found") {
       console.error(stationId, error.toString());
     }
     return [];
   }
 };
 
-export const getTrip = async (tripId) => {
+export const getTrip = async (tripId: string): Promise<RTrip> => {
   try {
-    const trip = await hafas.trip(tripId);
+    const trip = await hafas.trip(tripId, {});
 
-    return trip.trip;
+    return trip.trip as RTrip;
   } catch (error) {
-    console.error(tripId, error.toString());
+    console.error(tripId, error);
+    throw error;
   }
 };
