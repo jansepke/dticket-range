@@ -15,4 +15,5 @@ export interface Station {
     lat: number;
     lng: number;
   };
+  city: String;
 }

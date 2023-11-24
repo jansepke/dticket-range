@@ -15,6 +15,8 @@
 - combine multiple stations in same city
 - change settings in UI
 - explain results
+- dependabot
+- automatic redeploy
 
 ## Inspired by
 
