@@ -1,35 +1,25 @@
 /// <reference path="../types/db-hafas.d.ts" />
-import { createDbHafas } from "db-hafas";
+import { ignoreProducts } from "./configuration.ts";
 import { RAlternative, RTrip } from "@/types/hafas-client";
+import { createDbHafas } from "db-hafas";
 
 const hafas = createDbHafas("jansepke");
 
-const ignoreProducts = [
-  "Bus", // Train Replacement Bus
-  "FLX", // FlixTrain
-  "PRE", // Pressnitztalbahn
-  "IRE", // DB Regio AG Zusatzzug
-  "D", // Sylt Shuttle Plus
-  "R", // Ceske Drahy
-  "Os", // Ceske Drahy
-  "EN", // NightTrains to Sweden ???
-  "CLR", // Cargo Logistik Rail Service GmbH
-  "KD", // Koleje Dolnoslaskie
-  "REX", // Österreichische Bundesbahnen
-  "IR", // SBB
-  "WB", // WESTbahn
-  "DBK", // DBK Historische Bahn
-];
+const startOfNextMonday = new Date();
+startOfNextMonday.setDate(startOfNextMonday.getDate() + ((1 + 7 - startOfNextMonday.getDay()) % 7));
+startOfNextMonday.setUTCHours(0, 0, 0, 0);
+
+const oneDay = 24 * 60;
 
 const validProductName = (productName?: string) => !!productName && !ignoreProducts.includes(productName);
 const validForDTicket = (d: RAlternative) => validProductName(d.line.productName);
 
 export const getDepartures = async (stationId: string): Promise<RAlternative[]> => {
-  // TODO: search for next 7 dates
   try {
     const departures = await hafas.departures(stationId, {
-      when: new Date(new Date().getTime() + 86400000),
-      duration: 24 * 60, // 24h
+      when: startOfNextMonday,
+      duration: oneDay, // more is not possible
+      results: 1000,
       products: {
         nationalExpress: false,
         national: false,
@@ -42,7 +32,6 @@ export const getDepartures = async (stationId: string): Promise<RAlternative[]> 
         tram: false,
         taxi: false,
       },
-      remarks: false,
     });
 
     return (departures.departures as RAlternative[]).filter(validForDTicket);
