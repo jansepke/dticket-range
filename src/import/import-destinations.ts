@@ -45,7 +45,7 @@ async function main() {
     const uniqueLines = unique(lines);
 
     for (const line of uniqueLines) {
-      findDestinations(connectionsByLine, linesByStation, station, line, destinations);
+      findDestinations(station, connectionsByLine, linesByStation, line, destinations);
     }
 
     await fs.writeFile(`./data/destinations/${station}.json`, JSON.stringify(destinations));
@@ -56,11 +56,12 @@ async function main() {
 }
 
 function findDestinations(
+  initialStation: string,
   connectionsByLine: Record<string, Connection[]>,
   linesByStation: Record<string, string[]>,
-  station: string,
   line: string,
   destinations: Destinations,
+  changeStation = initialStation,
   changed = 0,
   duration = 0,
 ) {
@@ -68,11 +69,11 @@ function findDestinations(
     return;
   }
 
-  const connections = connectionsForStation(connectionsByLine[line], station, line);
+  const connections = connectionsForStation(connectionsByLine[line], changeStation, line);
 
   for (const connection of connections) {
     duration += connection.duration;
-    if (duration > maxDuration) {
+    if (duration > maxDuration || connection.to === initialStation) {
       continue;
     }
 
@@ -86,11 +87,12 @@ function findDestinations(
       if (linesByStation[connection.to] && connection.to) {
         for (const nextLine of linesByStation[connection.to]) {
           findDestinations(
+            initialStation,
             connectionsByLine,
             linesByStation,
-            connection.to,
             nextLine,
             destinations,
+            connection.to,
             changed + 1,
             duration + connection.pause,
           );

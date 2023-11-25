@@ -12,12 +12,16 @@ interface StationPageParams {
 export default async function StationPage({ params }: { params: StationPageParams }) {
   const stations = await getStations();
 
+  const start = stations
+    .map((s) => ({ id: s.id, station: s.name, lat: s.location.lat, lng: s.location.lng }))
+    .find((s) => s.id === params.id);
   const destinations: Destinations = params.id ? await getDestinations(params.id) : {};
 
   return (
     <Stack sx={{ height: "100vh" }}>
       <ConfigurationForm currentStation={params.id} stations={stations.map((s) => ({ label: s.name, id: s.id }))} />
       <Map
+        start={start}
         destinations={Object.entries(destinations).flatMap(([id, data]) => {
           const station = stations.find((s) => s.id === id);
           // TODO: why are some stations missing?

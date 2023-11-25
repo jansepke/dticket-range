@@ -11,18 +11,19 @@ interface DestinationForMap extends Destination {
 }
 
 interface MapProps {
+  start?: { station: string; lat: number; lng: number };
   destinations: DestinationForMap[];
 }
 
-export const Map: React.FC<MapProps> = ({ destinations }) => {
+export const Map: React.FC<MapProps> = (props) => {
   return (
     <Wrapper apiKey="AIzaSyBfGWxAFqcdu_sRuu3nHeRcqIuotkjLaFU">
-      <InnerMap destinations={destinations} />
+      <InnerMap {...props} />
     </Wrapper>
   );
 };
 
-const InnerMap: React.FC<MapProps> = ({ destinations }) => {
+const InnerMap: React.FC<MapProps> = ({ start, destinations }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,6 +38,16 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
       var bounds = new google.maps.LatLngBounds();
 
       const infowindow = new google.maps.InfoWindow();
+
+      if (start) {
+        new google.maps.Marker({
+          map,
+          position: { lat: start.lat, lng: start.lng },
+          title: start.station,
+          icon: "https://maps.gstatic.com/mapfiles/ms2/micons/rangerstation.png",
+        });
+        bounds.extend(start);
+      }
 
       for (const destination of destinations) {
         const marker = new google.maps.Marker({
@@ -61,7 +72,7 @@ const InnerMap: React.FC<MapProps> = ({ destinations }) => {
         map.fitBounds(bounds);
       }
     }
-  }, [ref, destinations]);
+  }, [ref, destinations, start]);
 
   return <Box sx={{ flexGrow: 1 }} ref={ref} />;
 };
