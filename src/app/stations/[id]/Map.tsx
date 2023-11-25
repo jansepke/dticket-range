@@ -1,8 +1,8 @@
 "use client";
-import { Destination, Destinations } from "@/types";
+import { Destination } from "@/types";
 import { Wrapper } from "@googlemaps/react-wrapper";
 import Box from "@mui/material/Box";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface DestinationForMap extends Destination {
   station: string;

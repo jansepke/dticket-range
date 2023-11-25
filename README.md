@@ -1,5 +1,9 @@
 # dticket-range
 
+## Limitations
+
+- recognizes only departures on the next monday
+
 ## Local Setup
 
 1. install node 20.6+

@@ -21,3 +21,8 @@ function sortStations(a: Station, b: Station): number {
 function cleanName(name: string) {
   return name.replaceAll("-", " ").replaceAll("(", "").replaceAll(")", "");
 }
+
+export const getStationIds = async () => {
+  const stations = JSON.parse(await fs.readFile("data/stations.json", "utf-8")) as Station[];
+  return stations.map((s) => s.id);
+};

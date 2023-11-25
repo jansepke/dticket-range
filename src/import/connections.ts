@@ -1,5 +1,6 @@
 import { Connection } from "@/types";
 import { RTrip } from "@/types/hafas-client";
+import { getTrip } from "./hafas.ts";
 
 export function connectionsFromTrip(trip: RTrip) {
   const connections: Connection[] = [];
@@ -20,7 +21,7 @@ export function connectionsFromTrip(trip: RTrip) {
         throw new Error(`duration < 0 for ${trip.line.id} from ${from} to ${to}`);
       }
 
-      connections.push({ from, to, duration, pause });
+      connections.push({ from, to, duration, pause, line: trip.line.id! });
     }
 
     prevStop = stop;
@@ -31,14 +32,14 @@ export function connectionsFromTrip(trip: RTrip) {
 
 export function connectionsForStation(connections: Connection[], station: string, line: string) {
   if (!Array.isArray(connections)) {
-    console.error(`no connections for ${station} and ${line}`);
+    // console.error(`no connections for ${station} and ${line}`);
     return [];
   }
 
   const isReverse = connections.find((c) => c.to === station);
 
   if (isReverse) {
-    connections = connections.reverse().map((c) => ({ to: c.from, from: c.to, duration: c.duration, pause: c.pause }));
+    connections = connections.reverse().map(({ from, to, ...c }) => ({ to: from, from: to, ...c }));
   }
 
   const startIdx = connections.findIndex((c) => c.from === station);
@@ -50,3 +51,18 @@ export function connectionsForStation(connections: Connection[], station: string
 
   return connections.slice(startIdx);
 }
+
+export const getConnectionsForLine = async ([line, trips]: [string, string[]]): Promise<Connection[]> => {
+  if (trips.length === 0) {
+    return [];
+  }
+
+  const trip = await getTrip(trips[0]);
+
+  if (line !== trip.line.id) {
+    console.log("trip not matching line", line, trip.line.id);
+    return await getConnectionsForLine([line, trips.slice(1)]);
+  }
+
+  return connectionsFromTrip(trip);
+};

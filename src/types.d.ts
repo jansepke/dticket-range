@@ -19,6 +19,7 @@ export interface Station {
 }
 
 export interface Connection {
+  line: string;
   from: string;
   to: string;
   duration: number;
