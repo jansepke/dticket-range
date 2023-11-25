@@ -7,9 +7,10 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "import-destinations",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/scripts/import.mjs"
+      "runtimeArgs": ["--loader", "ts-node/esm"],
+      "program": "${workspaceFolder}/src/import/import-destinations.ts"
     }
   ]
 }
