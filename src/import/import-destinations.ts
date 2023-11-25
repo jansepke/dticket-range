@@ -42,7 +42,9 @@ async function main() {
   for (const [station, lines] of Object.entries(linesByStation)) {
     const destinations: Destinations = {};
 
-    for (const line of unique(lines)) {
+    const uniqueLines = unique(lines);
+
+    for (const line of uniqueLines) {
       findDestinations(connectionsByLine, linesByStation, station, line, destinations);
     }
 

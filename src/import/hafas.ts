@@ -38,7 +38,7 @@ export const getDepartures = async (stationId: string): Promise<{ station: strin
     return (departures.departures as RAlternative[]).filter(validForDTicket).map((d) => {
       assert(d.line?.id, `lineId missing ${d}`);
 
-      return { station: stationId, line: d.line.id, trip: d.tripId };
+      return { station: stationId, line: d.line.adminCode + d.line.id, trip: d.tripId };
     });
   } catch (error) {
     if (error instanceof Error && error.toString() !== "Error: LOCATION: location/stop not found") {

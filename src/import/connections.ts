@@ -21,7 +21,7 @@ export function connectionsFromTrip(trip: RTrip) {
         throw new Error(`duration < 0 for ${trip.line.id} from ${from} to ${to}`);
       }
 
-      connections.push({ from, to, duration, pause, line: trip.line.id! });
+      connections.push({ from, to, duration, pause, line: trip.line.adminCode! + trip.line.id! });
     }
 
     prevStop = stop;
@@ -59,7 +59,7 @@ export const getConnectionsForLine = async ([line, trips]: [string, string[]]): 
 
   const trip = await getTrip(trips[0]);
 
-  if (line !== trip.line.id) {
+  if (line !== trip.line.adminCode! + trip.line.id) {
     console.log("trip not matching line", line, trip.line.id);
     return await getConnectionsForLine([line, trips.slice(1)]);
   }
