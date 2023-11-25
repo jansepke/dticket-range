@@ -16,36 +16,49 @@ const validProductName = (productName?: string) => !!productName && !ignoreProdu
 const validForDTicket = (d: RAlternative) => validProductName(d.line.productName);
 
 export const getDepartures = async (stationId: string): Promise<{ station: string; line: string; trip: string }[]> => {
-  try {
-    const departures = await hafas.departures(stationId, {
-      when: startOfNextMonday,
-      duration: oneDay, // more is not possible
-      results: 1000,
-      products: {
-        nationalExpress: false,
-        national: false,
-        regionalExpress: true,
-        regional: true,
-        suburban: false,
-        bus: false,
-        ferry: false,
-        subway: false,
-        tram: false,
-        taxi: false,
-      },
-    });
+  let retries = 3;
 
-    return (departures.departures as RAlternative[]).filter(validForDTicket).map((d) => {
-      assert(d.line?.id, `lineId missing ${d}`);
+  while (retries-- > 0) {
+    try {
+      const departures = await hafas.departures(stationId, {
+        when: startOfNextMonday,
+        duration: oneDay, // more is not possible
+        results: 1000,
+        products: {
+          nationalExpress: false,
+          national: false,
+          regionalExpress: true,
+          regional: true,
+          suburban: false,
+          bus: false,
+          ferry: false,
+          subway: false,
+          tram: false,
+          taxi: false,
+        },
+      });
 
-      return { station: stationId, line: d.line.adminCode + d.line.id, trip: d.tripId };
-    });
-  } catch (error) {
-    if (error instanceof Error && error.toString() !== "Error: LOCATION: location/stop not found") {
-      console.error(stationId, error.toString());
+      return (departures.departures as RAlternative[]).filter(validForDTicket).map((d) => {
+        assert(d.line?.id, `lineId missing ${d}`);
+
+        return { station: stationId, line: d.line.adminCode + d.line.id, trip: d.tripId };
+      });
+    } catch (error) {
+      const errorText = error instanceof Error ? error.toString() : error;
+
+      if (errorText === "Error: CGI_NO_SERVER: unknown error") {
+        continue;
+      }
+
+      if (errorText !== "Error: LOCATION: location/stop not found") {
+        console.error(stationId, errorText);
+      }
+
+      return [];
     }
-    return [];
   }
+
+  return [];
 };
 
 export const getTrip = async (tripId: string): Promise<RTrip> => {
