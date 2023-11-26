@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "import:stations": "NODE_OPTIONS='--loader ts-node/esm' node --env-file .env.local ./src/import/import-stations.ts || node ./import/import-stations.ts",
+    "import:stations": "node --loader ts-node/esm --env-file .env.local ./src/import/import-stations.ts || node --loader ts-node/esm ./src/import/import-stations.ts",
     "import:destinations": "rm -f ./data/destinations/* && node --loader ts-node/esm ./src/import/import-destinations.ts",
     "import": "npm run import:stations && npm run import:destinations",
     "dev": "next dev",
