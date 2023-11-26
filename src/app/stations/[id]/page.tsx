@@ -15,23 +15,28 @@ export default async function StationPage({ params }: { params: StationPageParam
   const start = stations
     .map((s) => ({ id: s.id, station: s.name, lat: s.location.lat, lng: s.location.lng }))
     .find((s) => s.id === params.id);
+
   const destinations: Destinations = params.id ? await getDestinations(params.id) : {};
+  const destinationsForMap = Object.entries(destinations).flatMap(([id, data]) => {
+    const station = stations.find((s) => s.id === id);
+    // TODO: why are some stations missing?
+    if (!station) {
+      return [];
+    }
+
+    return {
+      station: station.name,
+      lat: station.location.lat,
+      lng: station.location.lng,
+      ...data,
+      changed: data.changed.map((cs) => stations.find((s) => s.id === cs)?.name!),
+    };
+  });
 
   return (
     <Stack sx={{ height: "100vh" }}>
       <ConfigurationForm currentStation={params.id} stations={stations.map((s) => ({ label: s.name, id: s.id }))} />
-      <Map
-        start={start}
-        destinations={Object.entries(destinations).flatMap(([id, data]) => {
-          const station = stations.find((s) => s.id === id);
-          // TODO: why are some stations missing?
-          if (!station) {
-            return [];
-          }
-
-          return { station: station.name, lat: station.location.lat, lng: station.location.lng, ...data };
-        })}
-      />
+      <Map start={start} destinations={destinationsForMap} />
     </Stack>
   );
 }

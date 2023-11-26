@@ -62,10 +62,10 @@ function findDestinations(
   line: string,
   destinations: Destinations,
   changeStation = initialStation,
-  changed = 0,
+  changed: string[] = [],
   duration = 0,
 ) {
-  if (changed > maxChanges) {
+  if (changed.length > maxChanges) {
     return;
   }
 
@@ -80,7 +80,7 @@ function findDestinations(
     if (
       !destinations[connection.to] ||
       destinations[connection.to].duration > duration ||
-      (destinations[connection.to].duration === duration && destinations[connection.to].changed > changed)
+      (destinations[connection.to].duration === duration && destinations[connection.to].changed.length > changed.length)
     ) {
       destinations[connection.to] = { duration, line, changed };
 
@@ -93,7 +93,7 @@ function findDestinations(
             nextLine,
             destinations,
             connection.to,
-            changed + 1,
+            [...changed, connection.to],
             duration + connection.pause,
           );
         }

@@ -56,9 +56,8 @@ const InnerMap: React.FC<MapProps> = ({ start, destinations }) => {
           title: destination.station,
         });
 
-        const description = `${destination.station} in ${formatDuration(destination.duration)} by ${
-          destination.line
-        } (${destination.changed} changes)`;
+        const description = `${destination.station} in ${formatDuration(destination.duration)}<br />
+        by ${destination.line} ${destination.changed.length > 0 ? `<br /> via ${destination.changed.join(", ")}` : ""}`;
 
         marker.addListener("click", () => {
           infowindow.setContent(description);
