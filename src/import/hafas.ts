@@ -8,7 +8,7 @@ const hafas = createDbHafas("jansepke");
 
 const startOfNextMonday = new Date();
 startOfNextMonday.setDate(startOfNextMonday.getDate() + ((1 + 7 - startOfNextMonday.getDay()) % 7));
-startOfNextMonday.setUTCHours(0, 0, 0, 0);
+startOfNextMonday.setUTCHours(6, 0, 0, 0);
 
 const oneDay = 24 * 60;
 
